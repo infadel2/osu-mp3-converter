@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>rankable osu! mp3 converter</title>
+	<script type="text/javascript" src="/eel.js"></script>
+	<style>
+	  body {
+	    background: #333;
+		color: white;
+		font-family: Arial;
+		text-align: center;
+	  }
+	  input {
+	    background: #222;
+		color: white;
+		border: none
+	  }
+	  input[type="text"] {width: 300px}
+	  input[type="button"]:active {background: #444}
+	  label {font-size: 11pt}
+	  h1, h3 {margin-bottom: -10px}
+	</style>
+  </head>
+  <body>
+    <h1>youtube to rankable osu! mp3 converter</h1>
+	<h3>it doesn't get more basic than this...</h3><br><br>
+	<input type="text" placeholder="https://www.youtube.com/watch?v=xxxxxxxxxxx">
+	<input type="button" value="Convert" onclick="startConversion()"><br><br>
+	<input type="checkbox" id="metadata_server"><label for="metadata_server">add server metadata</label><br>
+	<input type="checkbox" id="metadata_youtube"><label for="metadata_youtube">add youtube metadata</label><br>
+	<input type="checkbox" id="spectrogram"><label for="spectrogram">generate spectrogram</label>
+	<script>
+	  document.getElementById('metadata_server').checked = true;
+      function startConversion() {
+	    document.querySelector('input[type="text"]').value = document.querySelector('input[type="text"]').value.split("&")[0]; 
+        eel.taskGen(
+		  document.querySelector('input[type="text"]').value,
+		  document.getElementById('metadata_server').checked,
+		  document.getElementById('metadata_youtube').checked,
+		  document.getElementById('spectrogram').checked,
+	    );
+	    eel.expose(startDownload);
+      }
+	  function startDownload(base64_string, video_id) {
+		downloadFromUrl('data:audio/mp3;base64,' + base64_string, video_id);
+	  }
+	  function downloadFromUrl(fileUrl, fileName) {
+		const link = document.createElement('a');
+		link.style.display = 'none';
+		link.href = fileUrl;
+		link.download = fileName;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	  }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+eel
+yt-dlp
+eyeD3
+ffmpeg-python
+numpy
+matplotlib
+scipy
