@@ -27,12 +27,16 @@ def taskGen(youtube_link, md_serv, md_yt, spek):
         }],
         'outtmpl': str(temp_folder) + '/final',
     }
-    with yt_dlp.YoutubeDL(defaults) as ydl:
-        #ydl.download([youtube_link])
-        info_dict = ydl.extract_info(youtube_link, download=True)
-        video_id = info_dict.get('id')
-        video_title = info_dict.get('title')
-        video_artist = info_dict.get('uploader')
+    try:
+        with yt_dlp.YoutubeDL(defaults) as ydl:
+            #ydl.download([youtube_link])
+            info_dict = ydl.extract_info(youtube_link, download=True)
+            video_id = info_dict.get('id')
+            video_title = info_dict.get('title')
+            video_artist = info_dict.get('uploader')
+    except Exception as e:
+        eel.catchErrorMessage(f"{e}")
+        return
     os.rename(str(temp_folder) + '/final.mp3', str(temp_folder) + '/' + video_id + '.mp3')
 
     # eyed3 section (we use eyed3 here because ffmpeg sucks

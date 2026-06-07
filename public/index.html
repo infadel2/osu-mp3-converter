@@ -42,6 +42,7 @@
 	    );
 	    eel.expose(startDownload);
 		eel.expose(showSpectrogram);
+		eel.expose(catchErrorMessage);
       }
 	  function startDownload(base64_string, video_id) {
 		downloadFromUrl('data:audio/mp3;base64,' + base64_string, video_id);
@@ -56,6 +57,12 @@
 		containerImg.src = 'static/img/marker.png';
 		document.body.appendChild(container);
 		container.appendChild(containerImg);
+	  }
+	  function catchErrorMessage(exception) {
+	    const message = document.createElement('span');
+		message.style.cssText = 'text-align: center; margin-top: 10px; color: red';
+		message.innerHTML = '<br><b>An error has occurred. Please try again later.</b><br>' + exception;
+		document.body.appendChild(message);
 	  }
 	  function downloadFromUrl(fileUrl, fileName) {
 		const link = document.createElement('a');
