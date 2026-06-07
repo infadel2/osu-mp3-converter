@@ -19,6 +19,7 @@
 	  input[type="button"]:active {background: #444}
 	  label {font-size: 11pt}
 	  h1, h3 {margin-bottom: -10px}
+	  .spek-container {width: 533px; height: 350px; position: absolute; margin-top: 10px; left: 50%; transform: translateX(-50%)}
 	</style>
   </head>
   <body>
@@ -28,19 +29,41 @@
 	<input type="button" value="Convert" onclick="startConversion()"><br><br>
 	<input type="checkbox" id="metadata_server"><label for="metadata_server">add server metadata</label><br>
 	<input type="checkbox" id="metadata_youtube"><label for="metadata_youtube">add youtube metadata</label><br>
+	<input type="checkbox" id="spectrogram"><label for="spectrogram">generate spectrogram</label><br>
 	<script>
 	  document.getElementById('metadata_server').checked = true;
+	  document.getElementById('spectrogram').checked = true;
       function startConversion() {
 	    document.querySelector('input[type="text"]').value = document.querySelector('input[type="text"]').value.split("&")[0]; 
         eel.taskGen(
 		  document.querySelector('input[type="text"]').value,
 		  document.getElementById('metadata_server').checked,
 		  document.getElementById('metadata_youtube').checked,
+		  document.getElementById('spectrogram').checked,
 	    );
 	    eel.expose(startDownload);
+		eel.expose(showSpectrogram);
+		eel.expose(catchErrorMessage);
       }
 	  function startDownload(base64_string, video_id) {
 		downloadFromUrl('data:audio/mp3;base64,' + base64_string, video_id);
+	  }
+	  function showSpectrogram(spek_data) {
+	    const container = document.createElement('div');
+		const containerImg = document.createElement('img');
+		container.classList.add('spek-container');
+		container.style.backgroundImage = 'url(\'data:image/png;base64,' + spek_data + '\')';
+		container.style.backgroundSize = '100% 100%';
+		containerImg.style = 'width: 100%; height: 100%';
+		containerImg.src = 'static/img/marker.png';
+		document.body.appendChild(container);
+		container.appendChild(containerImg);
+	  }
+	  function catchErrorMessage(exception) {
+	    const message = document.createElement('span');
+		message.style.cssText = 'text-align: center; margin-top: 10px; color: red';
+		message.innerHTML = '<br><b>An error has occurred. Please try again later.</b><br>' + exception;
+		document.body.appendChild(message);
 	  }
 	  function downloadFromUrl(fileUrl, fileName) {
 		const link = document.createElement('a');
