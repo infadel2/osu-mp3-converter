@@ -8,11 +8,10 @@ if temp_folder.is_dir():
     shutil.rmtree(temp_folder)
 temp_folder.mkdir(parents=True, exist_ok=False)
 @eel.expose
-def taskGen(youtube_link, md_serv, md_yt, spek):
+def taskGen(youtube_link, md_serv, md_yt):
     add_post_metadata = md_serv
     add_youtube_metadata = md_yt
-    generate_spectrogram = spek
-    print('I: Starting task', youtube_link, 'with options', md_serv, md_yt, spek)
+    print('I: Starting task', youtube_link, 'with options', md_serv, md_yt)
 
     # yt-dlp section (self explanatory, we also save
     # brain power and lines with the ffmpeg postprocessor)
