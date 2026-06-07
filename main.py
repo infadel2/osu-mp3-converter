@@ -33,9 +33,6 @@ def taskGen(youtube_link, md_serv, md_yt, spek):
         video_id = info_dict.get('id')
         video_title = info_dict.get('title')
         video_artist = info_dict.get('uploader')
-    if Path(str(temp_folder) + '/' + video_id + '.mp3').is_file():
-        os.remove(str(temp_folder) + '/' + video_id + '.mp3') #todo: serve file that is already there instead of just deleting it
-        print('I: Dupe removed.')
     os.rename(str(temp_folder) + '/final.mp3', str(temp_folder) + '/' + video_id + '.mp3')
 
     # eyed3 section (we use eyed3 here because ffmpeg sucks
@@ -75,10 +72,16 @@ def taskGen(youtube_link, md_serv, md_yt, spek):
         plt.colorbar(label='Gain (dB)')
         plt.savefig(str(temp_folder) + '/' + video_id + '-spek.png', bbox_inches='tight', dpi=300)
         os.remove(str(temp_folder) + '/' + video_id + '-spek.wav')
+        with open(str(temp_folder) + '/' + video_id + '-spek.png', "rb") as file:
+            import base64
+            spek_data = base64.b64encode(file.read()).decode("utf-8")
+        eel.showSpectrogram(spek_data)
+        os.remove(str(temp_folder) + '/' + video_id + '-spek.png')
     with open(str(temp_folder) + '/' + video_id + '.mp3', "rb") as mp3_file:
         import base64 # this is a bit stupid but like whatever
         base64_string = base64.b64encode(mp3_file.read()).decode("utf-8")
     eel.startDownload(base64_string, video_id)
+    os.remove(str(temp_folder) + '/' + video_id + '.mp3')
 import argparse
 parser = argparse.ArgumentParser(description="A script that processes user data.")
 parser.add_argument("-p", "--port", type=int, default=4444, help="Port you want the server to serve to")
