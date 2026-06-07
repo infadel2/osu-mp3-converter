@@ -1,12 +1,24 @@
 import eel
-eel.init('public')
-# delete pre-existing temp-folder and make a new one
-from pathlib import Path
 import shutil
+import yt_dlp
+import os
+import eyed3
+import ffmpeg
+import base64
+import argparse
+import numpy as np
+import matplotlib.pyplot as plt
+from pathlib import Path
+from scipy.io import wavfile
+
+eel.init('public')
+
+# delete pre-existing temp-folder and make a new one
 temp_folder = Path('./temp')
 if temp_folder.is_dir():
     shutil.rmtree(temp_folder)
 temp_folder.mkdir(parents=True, exist_ok=False)
+
 @eel.expose
 def taskGen(youtube_link, md_serv, md_yt, spek):
     add_post_metadata = md_serv
@@ -14,10 +26,7 @@ def taskGen(youtube_link, md_serv, md_yt, spek):
     generate_spectrogram = spek
     print('I: Starting task', youtube_link, 'with options', md_serv, md_yt, spek)
 
-    # yt-dlp section (self explanatory, we also save
-    # brain power and lines with the ffmpeg postprocessor)
-    import yt_dlp
-    import os
+    # yt-dlp section (self explanatory, we also save brain power and lines with the ffmpeg postprocessor)
     defaults = {
         'format': 'bestaudio/best',
         'postprocessors': [{
@@ -39,10 +48,8 @@ def taskGen(youtube_link, md_serv, md_yt, spek):
         return
     os.rename(str(temp_folder) + '/final.mp3', str(temp_folder) + '/' + video_id + '.mp3')
 
-    # eyed3 section (we use eyed3 here because ffmpeg sucks
-    # at handling comment metadata for some reason)
+    # eyed3 section (we use eyed3 here because ffmpeg sucks at handling comment metadata for some reason)
     if add_post_metadata:
-        import eyed3
         audiofile = eyed3.load(str(temp_folder) + '/' +  video_id + '.mp3')
         if add_youtube_metadata:
             # this is disabled by default because it almost always
@@ -55,10 +62,6 @@ def taskGen(youtube_link, md_serv, md_yt, spek):
 
     # generate a spectrogram (if the user wants)
     if generate_spectrogram:
-        import ffmpeg
-        import numpy as np
-        import matplotlib.pyplot as plt
-        from scipy.io import wavfile
         (
             ffmpeg
             .input(str(temp_folder) + '/' + video_id + '.mp3')
@@ -77,17 +80,15 @@ def taskGen(youtube_link, md_serv, md_yt, spek):
         plt.savefig(str(temp_folder) + '/' + video_id + '-spek.png', bbox_inches='tight', dpi=300)
         os.remove(str(temp_folder) + '/' + video_id + '-spek.wav')
         with open(str(temp_folder) + '/' + video_id + '-spek.png', "rb") as file:
-            import base64
             spek_data = base64.b64encode(file.read()).decode("utf-8")
         eel.showSpectrogram(spek_data)
         os.remove(str(temp_folder) + '/' + video_id + '-spek.png')
     with open(str(temp_folder) + '/' + video_id + '.mp3', "rb") as mp3_file:
-        import base64 # this is a bit stupid but like whatever
         base64_string = base64.b64encode(mp3_file.read()).decode("utf-8")
     eel.startDownload(base64_string, video_id)
     os.remove(str(temp_folder) + '/' + video_id + '.mp3')
-import argparse
-parser = argparse.ArgumentParser(description="A script that processes user data.")
+
+parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", type=int, default=4444, help="Port you want the server to serve to")
 print('I: Server running on localhost:' + str(parser.parse_args().port))
 eel.start('index.html', mode=None, block=True, host='localhost', port=parser.parse_args().port)
