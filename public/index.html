@@ -27,17 +27,14 @@
 	<h3>it doesn't get more basic than this...</h3><br><br>
 	<input type="text" placeholder="https://www.youtube.com/watch?v=xxxxxxxxxxx">
 	<input type="button" value="Convert" onclick="startConversion()"><br><br>
-	<input type="checkbox" id="metadata_server"><label for="metadata_server">add server metadata</label><br>
 	<input type="checkbox" id="metadata_youtube"><label for="metadata_youtube">add youtube metadata</label><br>
 	<input type="checkbox" id="spectrogram"><label for="spectrogram">generate spectrogram</label><br>
 	<script>
-	  document.getElementById('metadata_server').checked = true;
 	  document.getElementById('spectrogram').checked = true;
       function startConversion() {
 	    document.querySelector('input[type="text"]').value = document.querySelector('input[type="text"]').value.split("&")[0]; 
         eel.taskGen(
 		  document.querySelector('input[type="text"]').value,
-		  document.getElementById('metadata_server').checked,
 		  document.getElementById('metadata_youtube').checked,
 		  document.getElementById('spectrogram').checked,
 	    );
