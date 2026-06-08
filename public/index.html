@@ -32,6 +32,12 @@
 	<script>
 	  document.getElementById('spectrogram').checked = true;
       function startConversion() {
+	    const spek = document.querySelector('.spek-container');
+		const msg = document.querySelector('.error-message');
+		if (spek)
+	      spek.remove();
+		else if (msg)
+		  msg.remove();
 	    document.querySelector('input[type="text"]').value = document.querySelector('input[type="text"]').value.split("&")[0]; 
         eel.taskGen(
 		  document.querySelector('input[type="text"]').value,
@@ -59,6 +65,7 @@
 	  function catchErrorMessage(exception) {
 	    const message = document.createElement('span');
 		message.style.cssText = 'text-align: center; margin-top: 10px; color: red';
+		message.classList.add('error-message');
 		message.innerHTML = '<br><b>An error has occurred. Please try again later.</b><br>' + exception;
 		document.body.appendChild(message);
 	  }
