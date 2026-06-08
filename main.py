@@ -55,8 +55,7 @@ def taskGen(youtube_link, metadata, spek):
         # this is disabled by default because it almost always sucks due to how ppl upload music to youtube
         audiofile.tag.artist = video_artist
         audiofile.tag.title = video_title
-        audiofile.tag.album = video_title
-    audiofile.tag.comments.set('check out https://github.com/infadel2/osu-mp3-converter')
+    audiofile.tag.comments.set('encoded with https://github.com/infadel2/osu-mp3-converter')
     audiofile.tag.save(version=(2, 3, 0)) # apparently 2.4 breaks windows id3 compatibility
 
     # generate a spectrogram (if the user wants)
