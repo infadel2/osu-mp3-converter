@@ -1,5 +1,5 @@
 # osu-mp3-converter
-html application that converts youtube links to (most of the time) rankable 192kbps mp3 files. this is indeed as basic as it gets (i made this in like a day lol)
+python eel server application that converts youtube links to (most of the time) rankable 192kbps mp3 files. this is indeed as basic as it gets (i made this in like a day lol)
 
 ## running on your own server
 just run the following commands and by default it runs on localhost:4444
