@@ -69,11 +69,11 @@
 		message.innerHTML = '<br><b>An error has occurred. Please try again later.</b><br>' + exception;
 		document.body.appendChild(message);
 	  }
-	  function downloadFromUrl(fileUrl, fileName) {
+	  function downloadFromUrl(file_url, filename) {
 		const link = document.createElement('a');
 		link.style.display = 'none';
-		link.href = fileUrl;
-		link.download = fileName;
+		link.href = file_url;
+		link.download = filename;
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);
