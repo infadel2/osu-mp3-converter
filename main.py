@@ -19,6 +19,11 @@ temp_folder = Path('./temp')
 if temp_folder.is_dir():
     shutil.rmtree(temp_folder)
 temp_folder.mkdir(parents=True, exist_ok=False)
+        
+def close_callback(route, websockets):
+    if not websockets:
+        while True:
+            time.sleep(5)
 
 @eel.expose
 def taskGen(youtube_link, metadata, spek):
@@ -91,4 +96,4 @@ def taskGen(youtube_link, metadata, spek):
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", type=int, default=4444, help="Port you want the server to serve to")
 print('I: Server running on localhost:' + str(parser.parse_args().port))
-eel.start('index.html', mode=None, block=True, host='localhost', port=parser.parse_args().port)
+eel.start('index.html', mode=None, block=True, host='localhost', port=parser.parse_args().port, close_callback=close_callback)
