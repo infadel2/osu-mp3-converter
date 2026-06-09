@@ -74,6 +74,7 @@ def taskGen(youtube_link, metadata, spek):
         sample_rate, audio_data = wavfile.read(str(temp_folder) + '/' + video_id + '-spek.wav')
         if len(audio_data.shape) > 1:
             audio_data = audio_data[:, 0]
+        plt.style.use('dark_background')
         plt.figure(figsize=(10, 6))
         plt.specgram(audio_data, Fs=sample_rate, cmap='gist_heat', NFFT=1024, noverlap=512, vmin=40, vmax=-40)
         plt.title('generated spectrogram for ' + video_id)
